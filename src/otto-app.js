@@ -1,7 +1,6 @@
 import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polymer-element'
 
 import moment from '../node_modules/moment/moment'
-
 // Vendor Elements
 import '../node_modules/@polymer/app-layout/app-header-layout/app-header-layout'
 import '../node_modules/@polymer/app-layout/app-header/app-header'
@@ -14,9 +13,9 @@ import '../node_modules/@polymer/app-route/app-route'
 import '../node_modules/@polymer/iron-pages/iron-pages'
 
 import '../node_modules/@polymer/paper-styles/color'
-
 // Custom Elements
 import './otto-schedule'
+import './otto-schedule-data'
 
 export class OttoApp extends PolymerElement {
   static get template() {
@@ -38,6 +37,8 @@ export class OttoApp extends PolymerElement {
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
     
+    <otto-schedule-data week="[[week]]" opening-hours="{{openingHours}}" time-slots="{{timeSlots}}"></otto-schedule-data>
+    
     <app-header slot="header">
       <app-toolbar>
         <div main-title>Otto</div>
@@ -46,7 +47,7 @@ export class OttoApp extends PolymerElement {
     </app-header>
 
     <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="404" role="main">
-      <otto-schedule name="schedule"></otto-schedule>
+      <otto-schedule name="schedule" opening-hours="[[openingHours]]" time-slots="{{timeSlots}}"></otto-schedule>
     </iron-pages>
     `
   }
