@@ -1,0 +1,16 @@
+{
+  "name": "otto",
+  "flat": true,
+  "version": "1.0.0",
+  "description": "Otto - Schedule all the things!",
+  "author": "GLO-2003",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0-pre.1",
+    "@webcomponents/webcomponentsjs": "^1.0.20"
+  },
+  "resolutions": {
+    "@webcomponents/webcomponentsjs": "1.0.20"
+  }
+}
