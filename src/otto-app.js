@@ -14,8 +14,7 @@ import '../node_modules/@polymer/iron-pages/iron-pages'
 
 import '../node_modules/@polymer/paper-styles/color'
 // Custom Elements
-import './otto-schedule'
-import './otto-schedule-data'
+import './otto-schedule-page'
 
 export class OttoApp extends PolymerElement {
   static get template() {
@@ -25,19 +24,24 @@ export class OttoApp extends PolymerElement {
         --primary-color: var(--paper-red-500);
         --secondary-color: var(--paper-purple-700);
 
-        display: block;
+        display: flex;
+        flex-direction: column;
+        
+        height: 100vh;
       }
 
       app-toolbar {
         color: #fff;
         background-color: var(--primary-color);
       }
+      
+      iron-pages {
+        flex: 1 0 auto;
+      }
     </style>
 
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
-    
-    <otto-schedule-data week="[[week]]" opening-hours="{{openingHours}}" time-slots="{{timeSlots}}"></otto-schedule-data>
     
     <app-header slot="header">
       <app-toolbar>
@@ -47,7 +51,7 @@ export class OttoApp extends PolymerElement {
     </app-header>
 
     <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="404" role="main">
-      <otto-schedule name="schedule" opening-hours="[[openingHours]]" time-slots="{{timeSlots}}"></otto-schedule>
+      <otto-schedule-page name="schedule" week="[[week]]"></otto-schedule-page>
     </iron-pages>
     `
   }

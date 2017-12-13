@@ -1,11 +1,12 @@
 import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polymer-element'
 
-import {flatten, random, range} from '../node_modules/lodash/lodash'
+import {random, range} from '../node_modules/lodash/lodash'
 
 import moment from '../node_modules/moment/moment'
 
+import Day from './models/Day'
 import OpeningHour from "./models/OpeningHour"
-import TimeSlot from "./models/TimeSlot"
+import Schedule from "./models/Schedule"
 
 export class OttoScheduleData extends PolymerElement {
   static get properties() {
@@ -14,44 +15,55 @@ export class OttoScheduleData extends PolymerElement {
         type: Date,
         required: true
       },
-      openingHours: {
+      schedule: {
         type: Object,
-        notify: true
-      },
-      timeSlots: {
-        type: Array,
         notify: true
       }
     }
   }
 
+  static get observers() {
+    return [
+      '_weekChanged(week)'
+    ]
+  }
+
   ready() {
     super.ready()
-
-    // TODO: Fetch opening hours and time slots from API
-    this.openingHours = this._generateOpeningHours()
-    this.timeSlots = this._generateTimeSlots(this.openingHours)
   }
 
-  _generateOpeningHours() {
+  scheduleStaff(timeSlot, staff) {
+    console.log('scheduling staff', timeSlot, staff)
+  }
+
+  _weekChanged(week) {
+    this._generateSchedule(week)
+  }
+
+  _generateSchedule(week) {
+    const days = this._generateDays(week)
+    this.schedule = new Schedule(week, days)
+  }
+
+  _generateDays(week) {
     return range(7).map((day) => {
-      const date = moment(this.week).add(day, 'day')
-      const openAt = random(6, 9)
-      const closedAt = random(15, 19)
-      return new OpeningHour(date, openAt, closedAt)
+      const datetime = moment(week).add(day, 'day')
+      const openAt = random(4, 9)
+      const closedAt = random(13, 22)
+      const openingHour = new OpeningHour(openAt, closedAt)
+      return new Day(datetime, openingHour)
     })
   }
 
-  _generateTimeSlots(openingHours) {
-    const timeSlots = openingHours.map((openingHour) => {
-      const latestHour = openingHour.closedAt - openingHour.openAt
-      const hours = range(random(3, 7)).map(() => random(0, latestHour)).sort()
-      const availableHours = [...new Set(hours)]
-      const dates = availableHours.map((hour) => moment(openingHour.date).add(hour, 'hours'))
-      return dates.map((date) => new TimeSlot(date))
-    })
-    return flatten(timeSlots)
-  }
+  // _generateTimeSlots(openingHours) {
+  //   const timeSlots = openingHours.map((openingHour) => {
+  //     const latestHour = openingHour.closedAt - openingHour.openAt
+  //     const availableHours = uniq(range(random(3, 7)).map(() => random(0, latestHour)).sort())
+  //     const dates = availableHours.map((hour) => moment(openingHour.date).add(hour, 'hours'))
+  //     return dates.map((date) => new TimeSlot(date))
+  //   })
+  //   return flatten(timeSlots)
+  // }
 }
 
 customElements.define('otto-schedule-data', OttoScheduleData)

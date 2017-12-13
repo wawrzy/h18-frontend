@@ -5,6 +5,14 @@ $_sharedStyles.innerHTML = `
 <dom-module id="shared-styles">
   <template>
     <style>
+      paper-button {
+        font-weight: bold;
+      }
+
+      paper-button[raised] {
+        background-color: var(--primary-color);
+        color: white;
+      }
     </style>
   </template>
 </dom-module>
