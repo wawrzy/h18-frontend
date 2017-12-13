@@ -1,4 +1,7 @@
 import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polymer-element'
+
+import moment from '../node_modules/moment/moment'
+
 // Vendor Elements
 import '../node_modules/@polymer/app-layout/app-header-layout/app-header-layout'
 import '../node_modules/@polymer/app-layout/app-header/app-header'
@@ -11,6 +14,7 @@ import '../node_modules/@polymer/app-route/app-route'
 import '../node_modules/@polymer/iron-pages/iron-pages'
 
 import '../node_modules/@polymer/paper-styles/color'
+
 // Custom Elements
 import './otto-schedule'
 
@@ -33,11 +37,11 @@ export class OttoApp extends PolymerElement {
 
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
-
+    
     <app-header slot="header">
       <app-toolbar>
         <div main-title>Otto</div>
-        <div>December 11-17</div>
+        <div>{{currentWeek}}</div>
       </app-toolbar>
     </app-header>
 
@@ -48,7 +52,17 @@ export class OttoApp extends PolymerElement {
   }
 
   static get properties() {
+    const week = moment().startOf('week')
+
     return {
+      week: {
+        type: Object,
+        value: week
+      },
+      currentWeek: {
+        type: String,
+        computed: '_formatCurrentWeek(week)'
+      },
       page: {
         type: String,
         reflectToAttribute: true,
@@ -67,6 +81,13 @@ export class OttoApp extends PolymerElement {
 
   _routePageChanged(page) {
     this.page = page || 'schedule'
+  }
+
+  _formatCurrentWeek(week) {
+    const firstDay = week.date()
+    const lastDay = week.date() + 6
+    const month = week.format('MMMM')
+    return `${month} ${firstDay}-${lastDay}`
   }
 }
 
