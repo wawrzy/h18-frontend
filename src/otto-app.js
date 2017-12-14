@@ -57,12 +57,10 @@ export class OttoApp extends PolymerElement {
   }
 
   static get properties() {
-    const week = moment().startOf('week')
-
     return {
       week: {
         type: Object,
-        value: week
+        value: moment().startOf('week')
       },
       currentWeek: {
         type: String,

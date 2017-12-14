@@ -1,7 +1,21 @@
+import {first, last, sortBy} from '../../node_modules/lodash/lodash'
+
 export default class Day {
-  constructor(datetime, openingHour) {
+  constructor(datetime, timeSlots) {
     this.datetime = datetime
-    this.openingHour = openingHour
+    this.timeSlots = timeSlots || []
+  }
+
+  get sortedTimeSlots() {
+    return sortBy(this.timeSlots, (timeSlot) => timeSlot.hour)
+  }
+
+  get openAt() {
+    return first(this.sortedTimeSlots)
+  }
+
+  get closedAt() {
+    return last(this.sortedTimeSlots)
   }
 
   get date() {

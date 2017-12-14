@@ -1,5 +1,10 @@
-export default class TimeSlot {
-  constructor(date) {
-    this.date = date
+export default class Hour {
+  constructor(datetime, scheduledStaffs) {
+    this.datetime = datetime
+    this.scheduledStaffs = scheduledStaffs || []
+  }
+
+  get hour() {
+    return this.datetime.hours()
   }
 }

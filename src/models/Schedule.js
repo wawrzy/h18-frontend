@@ -1,25 +1,28 @@
-import {head, uniq, range} from '../../node_modules/lodash/lodash'
-import moment from '../../node_modules/moment/moment'
+import {sortBy, sortedUniqBy, first, last, flatten} from '../../node_modules/lodash/lodash'
 
 export default class Schedule {
-  constructor(week, days) {
-    this.week = week
+  constructor(days) {
     this.days = days || []
   }
 
   get openingHours() {
-    return range(this.earliestOpeningHour, this.latestOpeningHour).map((hour) => moment(this.week).add(hour, 'hours'))
+    let timeSlots = flatten(this.days.map((day) => day.timeSlots))
+    timeSlots = sortBy(timeSlots, (timeSlot) => timeSlot.hour)
+    timeSlots = sortedUniqBy(timeSlots, (timeSlot) => timeSlot.hour)
+    return timeSlots
   }
 
-  get earliestOpeningHour() {
-    const openingHours = this.days.map((day) => day.openingHour)
-    const openAt = head(uniq(openingHours.map((openingHour) => openingHour.openAt)).sort())
-    return openAt || 0
+  get earliestOpenHour() {
+    let timeSlots = this.days.map((day) => day.openAt)
+    timeSlots = sortBy(timeSlots, (timeSlot) => timeSlot.hour)
+    timeSlots = sortedUniqBy(timeSlots, (timeSlot) => timeSlot.hour)
+    return first(timeSlots)
   }
 
-  get latestOpeningHour() {
-    const openingHours = this.days.map((day) => day.openingHour)
-    const closedAt = head(uniq(openingHours.map((openingHour) => openingHour.closedAt)).sort().reverse())
-    return closedAt || 24
+  get latestClosedHour() {
+    let timeSlots = this.days.map((day) => day.closedAt)
+    timeSlots = sortBy(timeSlots, (timeSlot) => timeSlot.hour)
+    timeSlots = sortedUniqBy(timeSlots, (timeSlot) => timeSlot.hour)
+    return last(timeSlots)
   }
 }

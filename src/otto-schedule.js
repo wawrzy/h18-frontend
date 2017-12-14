@@ -4,7 +4,7 @@ import './shared-styles'
 import './otto-schedule-col'
 import './otto-schedule-row'
 import './otto-schedule-row-filler'
-import './otto-schedule-data'
+import './otto-time-slot'
 
 export class OttoSchedule extends PolymerElement {
   static get template() {
@@ -48,14 +48,15 @@ export class OttoSchedule extends PolymerElement {
         <otto-schedule-row header title="[[day.date]]" subtitle="[[day.shortName]]"></otto-schedule-row>
         
         <otto-schedule-row-filler start="0" end="1"></otto-schedule-row-filler>
-        <otto-schedule-row-filler start="[[schedule.earliestOpeningHour]]" end="[[day.openingHour.openAt]]"></otto-schedule-row-filler>
+        <otto-schedule-row-filler start="[[schedule.earliestOpenHour.hour]]" end="[[day.openAt.hour]]"></otto-schedule-row-filler>
         
-        <template is="dom-repeat" items="{{day.openingHour.hours}}" as="hour">
+        <template is="dom-repeat" items="{{day.timeSlots}}" as="timeSlot">
           <otto-schedule-row active>
-            <!--<otto-timeslot hour="[[hour]]" time-slots="[[day.timeSlots]]" on-time-slot-selected="handleTimeSlotSelected"></otto-timeslot>-->
+            <otto-time-slot time-slot="[[timeSlot]]"></otto-time-slot>
           </otto-schedule-row>
         </template>
-        <otto-schedule-row-filler start="[[day.openingHour.closedAt]]" end="[[schedule.latestOpeningHour]]"></otto-schedule-row-filler>
+        
+        <otto-schedule-row-filler start="[[day.closedAt.hour]]" end="[[schedule.latestClosedHour.hour]]"></otto-schedule-row-filler>
       </otto-schedule-col>
     </template>
     `
@@ -72,7 +73,7 @@ export class OttoSchedule extends PolymerElement {
   }
 
   _computeOpeningHours(schedule) {
-    return schedule.openingHours.map((openingHour) => openingHour.format('h a'))
+    return schedule.openingHours.map((openingHour) => openingHour.datetime.format('h a'))
   }
 }
 
