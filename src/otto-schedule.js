@@ -28,6 +28,7 @@ export class OttoSchedule extends PolymerElement {
         justify-content: center;
         align-items: flex-end;
         border: none;
+        white-space: nowrap;
       }
       
       .opening-hour:nth-of-type(2) {

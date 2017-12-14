@@ -36,23 +36,25 @@ export class OttoApp extends PolymerElement {
       }
       
       iron-pages {
-        flex: 1 0 auto;
+        flex: 1 1 100%;
       }
     </style>
 
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
     
-    <app-header slot="header">
-      <app-toolbar>
-        <div main-title>Otto</div>
-        <div>{{currentWeek}}</div>
-      </app-toolbar>
-    </app-header>
+    <app-header-layout fullbleed has-scroll-region>
+      <app-header slot="header" fixed>
+        <app-toolbar>
+          <div main-title>Otto</div>
+          <div>{{currentWeek}}</div>
+        </app-toolbar>
+      </app-header>
 
-    <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="404" role="main">
-      <otto-schedule-page name="schedule" week="[[week]]"></otto-schedule-page>
+      <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="404" role="main">
+        <otto-schedule-page name="schedule" week="[[week]]"></otto-schedule-page>
     </iron-pages>
+    </app-header-layout>
     `
   }
 

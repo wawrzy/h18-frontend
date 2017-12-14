@@ -1,12 +1,21 @@
 import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polymer-element'
 
-import {random, range} from '../node_modules/lodash/lodash'
+import {sampleSize, random, range} from '../node_modules/lodash/lodash'
 
 import moment from '../node_modules/moment/moment'
 
 import Day from './models/Day'
 import TimeSlot from './models/TimeSlot'
 import Schedule from './models/Schedule'
+import Staff from './models/Staff'
+
+const staffs = [
+  new Staff('John', 'Doe', 'Cook'),
+  new Staff('Patricia', 'Carter', 'Cashier'),
+  new Staff('Raoul', 'Daqiri', 'Cleaner'),
+  new Staff('Steve', 'Trump', 'Manager'),
+  new Staff('Anna', 'Banana', 'Cook')
+]
 
 export class OttoScheduleData extends PolymerElement {
   static get properties() {
@@ -54,7 +63,8 @@ export class OttoScheduleData extends PolymerElement {
     const closedAt = random(13, 22)
     return range(openAt, closedAt).map((hour) => {
       const openingHourDatetime = moment(day).startOf('day').add(hour, 'hours')
-      return new TimeSlot(openingHourDatetime)
+      const scheduledStaffs = sampleSize(staffs, random(0, 4))
+      return new TimeSlot(openingHourDatetime, scheduledStaffs)
     })
   }
 }
