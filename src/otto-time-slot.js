@@ -10,6 +10,11 @@ export class OttoTimeSlot extends PolymerElement {
     return `
     <style>
       :host {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      #content {
         display: flex;
         flex-direction: row;
         box-sizing: border-box;
@@ -38,9 +43,11 @@ export class OttoTimeSlot extends PolymerElement {
       }
     </style>
     
-    <template is="dom-repeat" items="{{timeSlot.scheduledStaffs}}" as="staff">
-      <div class="staff">{{staff.firstName}}</div> 
-    </template>
+    <div id="content">
+      <template is="dom-repeat" items="{{timeSlot.scheduledStaffs}}" as="staff">
+        <div class="staff">{{staff.firstName}}</div> 
+      </template>
+    </div>
     `
   }
 
@@ -56,13 +63,13 @@ export class OttoTimeSlot extends PolymerElement {
   ready() {
     super.ready()
 
-    this.addEventListener('click', () => this._onClick())
+    this.$.content.addEventListener('click', () => this._onClick())
   }
 
   _onClick() {
     if (!this._dialog) {
       this._dialog = document.createElement('otto-time-slot-dialog')
-      document.body.appendChild(this._dialog)
+      this.root.appendChild(this._dialog)
     }
     this._dialog.timeSlot = this.timeSlot
     this._dialog.open()
