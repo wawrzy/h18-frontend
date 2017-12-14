@@ -1,19 +1,23 @@
 import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polymer-element'
 
 import '../node_modules/@polymer/paper-styles/color'
+import '../node_modules/@polymer/paper-dialog/paper-dialog'
+import '../node_modules/@polymer/paper-button/paper-button'
 
+import './shared-styles'
 import './otto-schedule-row'
-import './otto-time-slot-dialog'
+import './otto-time-slot-details'
 
 export class OttoTimeSlot extends PolymerElement {
   static get template() {
     return `
-    <style>
+    <style include="shared-styles">
       :host {
         position: relative;
         width: 100%;
         height: 100%;
       }
+      
       #content {
         display: flex;
         flex-direction: row;
@@ -43,6 +47,13 @@ export class OttoTimeSlot extends PolymerElement {
       }
     </style>
     
+    <paper-dialog id="dialog">
+      <otto-time-slot-details time-slot="[[timeSlot]]"></otto-time-slot-details>
+      <div class="buttons">
+        <paper-button dialog-confirm autofocus>Done</paper-button>
+      </div>
+    </paper-dialog>
+    
     <div id="content">
       <template is="dom-repeat" items="{{timeSlot.scheduledStaffs}}" as="staff">
         <div class="staff">{{staff.firstName}}</div> 
@@ -67,12 +78,7 @@ export class OttoTimeSlot extends PolymerElement {
   }
 
   _onClick() {
-    if (!this._dialog) {
-      this._dialog = document.createElement('otto-time-slot-dialog')
-      this.root.appendChild(this._dialog)
-    }
-    this._dialog.timeSlot = this.timeSlot
-    this._dialog.open()
+    this.$.dialog.open()
   }
 }
 
