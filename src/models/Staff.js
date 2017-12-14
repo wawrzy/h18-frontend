@@ -4,4 +4,8 @@ export default class Staff {
     this.lastName = lastName
     this.role = role
   }
+
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`
+  }
 }

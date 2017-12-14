@@ -12,18 +12,15 @@ import '../node_modules/@polymer/app-route/app-route'
 
 import '../node_modules/@polymer/iron-pages/iron-pages'
 
-import '../node_modules/@polymer/paper-styles/color'
 // Custom Elements
+import './shared-styles'
 import './otto-schedule-page'
 
 export class OttoApp extends PolymerElement {
   static get template() {
     return `
-    <style>
+    <style include="shared-styles">
       :host {
-        --primary-color: var(--paper-red-500);
-        --secondary-color: var(--paper-purple-700);
-
         display: flex;
         flex-direction: column;
         

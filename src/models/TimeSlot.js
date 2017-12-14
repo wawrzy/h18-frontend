@@ -7,4 +7,8 @@ export default class Hour {
   get hour() {
     return this.datetime.hours()
   }
+
+  get anyStaffScheduled() {
+    return this.scheduledStaffs.length > 0
+  }
 }

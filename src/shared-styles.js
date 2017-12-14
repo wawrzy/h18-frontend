@@ -5,6 +5,11 @@ $_sharedStyles.innerHTML = `
 <dom-module id="shared-styles">
   <template>
     <style>
+      :host {
+        --primary-color: var(--paper-red-500);
+        --secondary-color: var(--paper-purple-700);
+      }
+      
       paper-button {
         font-weight: bold;
       }

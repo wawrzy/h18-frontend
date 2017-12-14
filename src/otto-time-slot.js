@@ -3,6 +3,7 @@ import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polyme
 import '../node_modules/@polymer/paper-styles/color'
 
 import './otto-schedule-row'
+import './otto-time-slot-dialog'
 
 export class OttoTimeSlot extends PolymerElement {
   static get template() {
@@ -16,10 +17,6 @@ export class OttoTimeSlot extends PolymerElement {
         width: 100%;
         height: 100%;
         padding: 0 4px;
-
-        cursor: pointer;
-
-        transition: background .2s ease-out;
       }
       
       .staff {
@@ -54,6 +51,21 @@ export class OttoTimeSlot extends PolymerElement {
         required: true
       },
     }
+  }
+
+  ready() {
+    super.ready()
+
+    this.addEventListener('click', () => this._onClick())
+  }
+
+  _onClick() {
+    if (!this._dialog) {
+      this._dialog = document.createElement('otto-time-slot-dialog')
+      document.body.appendChild(this._dialog)
+    }
+    this._dialog.timeSlot = this.timeSlot
+    this._dialog.open()
   }
 }
 
