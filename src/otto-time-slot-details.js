@@ -2,6 +2,8 @@ import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polyme
 
 import {uniq} from '../node_modules/lodash/lodash'
 
+import './otto-schedule-staff'
+
 export class OttoTimeSlotDetails extends PolymerElement {
   static get template() {
     return `
@@ -34,7 +36,7 @@ export class OttoTimeSlotDetails extends PolymerElement {
     
     <h1>[[day]] - [[time]]</h1>
 
-    <template is="dom-if" if="{{timeSlot.anyStaffRequired}}">
+    <template is="dom-if" if="{{anyStaffRequired}}">
       <h2>Required staff</h2>
       <template is="dom-repeat" items="{{timeSlot.requiredStaffs}}" as="requiredStaff">
         <div>
@@ -44,7 +46,7 @@ export class OttoTimeSlotDetails extends PolymerElement {
       </template>
     </template>
 
-    <template is="dom-if" if="{{timeSlot.anyStaffScheduled}}">
+    <template is="dom-if" if="{{anyStaffScheduled}}">
       <h2>Scheduled staff</h2>
       <template is="dom-repeat" items="{{scheduledStaffRoles}}" as="role">
         <div>
@@ -55,6 +57,8 @@ export class OttoTimeSlotDetails extends PolymerElement {
         </div>
       </template>
     </template>
+    
+    <otto-schedule-staff time-slot="[[timeSlot]]"></otto-schedule-staff>
     `
   }
 
@@ -72,9 +76,17 @@ export class OttoTimeSlotDetails extends PolymerElement {
         type: Object,
         required: true
       },
+      anyStaffRequired: {
+        type: Boolean,
+        computed: '_computeAnyStaffRequired(timeSlot.requiredStaffs)'
+      },
+      anyStaffScheduled: {
+        type: Boolean,
+        computed: '_computeAnyStaffScheduled(timeSlot.scheduledStaffs)'
+      },
       scheduledStaffRoles: {
         type: Array,
-        computed: '_computeScheduledStaffRoles(timeSlot)',
+        computed: '_computeScheduledStaffRoles(timeSlot.scheduledStaffs)'
       }
     }
   }
@@ -87,10 +99,18 @@ export class OttoTimeSlotDetails extends PolymerElement {
     return timeSlot.datetime.format('HH:mm')
   }
 
-  _computeScheduledStaffRoles(timeSlot) {
-    const roles = uniq(timeSlot.scheduledStaffs.map((staff) => staff.role))
+  _computeAnyStaffRequired(requiredStaffs) {
+    return false
+  }
+
+  _computeAnyStaffScheduled(scheduledStaffs) {
+    return scheduledStaffs.length > 0
+  }
+
+  _computeScheduledStaffRoles(scheduledStaffs) {
+    const roles = uniq(scheduledStaffs.map((staff) => staff.role))
     return roles.map((role) => {
-      const staffs = timeSlot.scheduledStaffs.filter((staff) => staff.role === role)
+      const staffs = scheduledStaffs.filter((staff) => staff.role === role)
       return {
         name: role,
         staffs

@@ -1,6 +1,6 @@
 import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polymer-element'
 
-import {sampleSize, random, range} from '../node_modules/lodash/lodash'
+import {findIndex, difference, sampleSize, random, range} from '../node_modules/lodash/lodash'
 
 import moment from '../node_modules/moment/moment'
 
@@ -33,12 +33,39 @@ export class OttoScheduleData extends PolymerElement {
 
   static get observers() {
     return [
-      '_weekChanged(week)'
+      '_weekChanged(week)',
     ]
   }
 
   scheduleStaff(timeSlot, staff) {
-    console.log('scheduling staff', timeSlot, staff)
+    const dayId = this._findTimeSlotDayIndex(timeSlot)
+    const timeSlotId = this._findTimeSlotIndex(dayId, timeSlot)
+    const staffId = this._findStaffIndex(dayId, timeSlotId, staff)
+
+    this.push(`schedule.days.${dayId}.timeSlots.${timeSlotId}.scheduledStaffs`, staff)
+    this.splice(`schedule.days.${dayId}.timeSlots.${timeSlotId}.availableStaffs`, staffId, 1)
+
+    // Force notifying otherwise conditional and repeat templates do not see the changes <- not sure why...
+    this.notifyPath(`schedule.days.${dayId}.timeSlots.${timeSlotId}.scheduledStaffs`)
+    this.notifyPath(`schedule.days.${dayId}.timeSlots.${timeSlotId}.availableStaffs`)
+
+    // TODO: Make the actual call to the API
+  }
+
+  _findStaffIndex(dayIndex, timeSlotIndex, staff) {
+    return findIndex(this.schedule.days[dayIndex].timeSlots[timeSlotIndex].availableStaffs, staff)
+  }
+
+  _findTimeSlotIndex(dayIndex, timeSlot) {
+    return findIndex(this.schedule.days[dayIndex].timeSlots, (dayTimeSlot) => dayTimeSlot.isSame(timeSlot))
+  }
+
+  _findTimeSlotDayIndex(timeSlot) {
+    return findIndex(this.schedule.days, (day) => {
+      const startOfDay = moment(day.datetime).startOf('day')
+      const startOfTimeSlotDay = moment(timeSlot.datetime).startOf('day')
+      return startOfDay.isSame(startOfTimeSlotDay)
+    })
   }
 
   _weekChanged(week) {
@@ -63,8 +90,10 @@ export class OttoScheduleData extends PolymerElement {
     const closedAt = random(13, 22)
     return range(openAt, closedAt).map((hour) => {
       const openingHourDatetime = moment(day).startOf('day').add(hour, 'hours')
-      const scheduledStaffs = sampleSize(staffs, random(0, 4))
-      return new TimeSlot(openingHourDatetime, scheduledStaffs)
+      // const scheduledStaffs = sampleSize(staffs, random(0, 4))
+      const scheduledStaffs = []
+      const availableStaffs = difference(staffs, scheduledStaffs)
+      return new TimeSlot(openingHourDatetime, scheduledStaffs, availableStaffs)
     })
   }
 }
