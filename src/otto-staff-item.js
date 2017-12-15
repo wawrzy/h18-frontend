@@ -51,7 +51,7 @@ export class OttoStaffItem extends PolymerElement {
   ready() {
     super.ready()
 
-    this.addEventListener('click', () => this._unscheduleStaff())
+    this.$.unscheduleBtn.addEventListener('click', () => this._unscheduleStaff())
   }
 
   _unscheduleStaff() {
