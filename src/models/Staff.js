@@ -5,6 +5,10 @@ export default class Staff {
     this.role = role
   }
 
+  isAvailableOn(datetime) {
+    return true
+  }
+
   get fullName() {
     return `${this.firstName} ${this.lastName}`
   }

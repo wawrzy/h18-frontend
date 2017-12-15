@@ -1,15 +1,7 @@
-import {remove} from '../../node_modules/lodash/lodash'
-
 export default class TimeSlot {
-  constructor(datetime, scheduledStaffs, availableStaffs) {
+  constructor(datetime, scheduledStaffs) {
     this.datetime = datetime
     this.scheduledStaffs = scheduledStaffs || []
-    this.availableStaffs = availableStaffs || []
-  }
-
-  scheduleStaff(staff) {
-    remove(this.availableStaffs, staff)
-    this.scheduledStaffs.push(staff)
   }
 
   isSame(timeSlot) {
@@ -18,9 +10,5 @@ export default class TimeSlot {
 
   get hour() {
     return this.datetime.hours()
-  }
-
-  get anyStaffScheduled() {
-    return this.scheduledStaffs.length > 0
   }
 }

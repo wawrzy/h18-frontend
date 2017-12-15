@@ -1,5 +1,7 @@
 import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polymer-element'
 
+import {sortBy} from '../node_modules/lodash/lodash'
+
 import '../node_modules/web-animations-js/web-animations-next-lite.min'
 
 import '../node_modules/@polymer/paper-dropdown-menu/paper-dropdown-menu'
@@ -7,6 +9,7 @@ import '../node_modules/@polymer/paper-item/paper-item'
 import '../node_modules/@polymer/paper-listbox/paper-listbox'
 import '../node_modules/@polymer/paper-button/paper-button'
 
+import './otto-staff-data'
 import './shared-styles'
 
 export class OttoScheduleStaff extends PolymerElement {
@@ -14,9 +17,11 @@ export class OttoScheduleStaff extends PolymerElement {
     return `
     <style include="shared-styles"></style>
     
+    <otto-staff-data staffs="{{staffs}}"></otto-staff-data>
+    
     <paper-dropdown-menu selected-item="{{selectedStaff}}" label="Staff" no-animations>
       <paper-listbox slot="dropdown-content" id="dropdownContent">
-        <template is="dom-repeat" items="{{timeSlot.availableStaffs}}" as="staff">
+        <template is="dom-repeat" items="{{availableStaffs}}" as="staff">
           <paper-item id="[[index]]">[[staff.fullName]] - [[staff.role]]</paper-item>
         </template>
       </paper-listbox>
@@ -30,6 +35,11 @@ export class OttoScheduleStaff extends PolymerElement {
       timeSlot: {
         type: Object,
         required: true
+      },
+      staffs: Array,
+      availableStaffs: {
+        type: Array,
+        computed: '_computeAvailableStaffs(staffs, timeSlot.scheduledStaffs, timeSlot.datetime)'
       },
       selectedStaff: Object
     }
@@ -47,8 +57,15 @@ export class OttoScheduleStaff extends PolymerElement {
     this.$.scheduleBtn.addEventListener('click', () => this._onScheduleStaff())
   }
 
+  _computeAvailableStaffs(staffs, scheduledStaffs, datetime) {
+    if (!staffs || !scheduledStaffs || !datetime) return []
+
+    const availableStaffs = staffs.filter((staff) => !scheduledStaffs.includes(staff) && staff.isAvailableOn(datetime));
+    return sortBy(availableStaffs, (staff) => staff.role.toLowerCase())
+  }
+
   _selectedStaffChanged(selectedStaff) {
-    this.staffToSchedule = selectedStaff ? this.timeSlot.availableStaffs[selectedStaff.id] : null
+    this.staffToSchedule = selectedStaff ? this.availableStaffs[selectedStaff.id] : null
   }
 
   _onScheduleStaff() {
