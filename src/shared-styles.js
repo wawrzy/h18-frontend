@@ -10,7 +10,7 @@ $_sharedStyles.innerHTML = `
         --secondary-color: var(--paper-purple-700);
       }
       
-      paper-button {
+      paper-button:not([dialog-dismiss]) {
         font-weight: bold;
       }
 

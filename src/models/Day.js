@@ -22,6 +22,10 @@ export default class Day {
     return this.datetime.date()
   }
 
+  get name() {
+    return this.datetime.format('dddd')
+  }
+
   get shortName() {
     return this.datetime.format('ddd')
   }
