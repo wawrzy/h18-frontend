@@ -2,27 +2,18 @@ import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polyme
 
 import '../node_modules/@polymer/paper-dialog/paper-dialog'
 
-import './otto-opening-hours'
 import './otto-schedule-data'
 import './otto-schedule'
+import './otto-settings'
 
 export class OttoSchedulePage extends PolymerElement {
   static get template() {
     return ` 
-    <style>
-      #openingHoursDialog {
-        display: flex;
-        flex-direction: column;
-      }
-    </style>
-    
     <otto-schedule-data id="schedule" week="[[week]]" schedule="{{schedule}}"></otto-schedule-data>
     
-    <paper-dialog id="openingHoursDialog">
-      <h1>Opening hours</h1>
-      <template is="dom-repeat" items="{{schedule.days}}" as="day">
-        <otto-opening-hours day="[[day]]"></otto-opening-hours>
-      </template>
+    <paper-dialog id="settings">
+      <otto-settings schedule="[[schedule]]"></otto-settings>
+      
       <div class="buttons">
         <paper-button dialog-confirm autofocus>Done</paper-button>
       </div>
@@ -49,8 +40,8 @@ export class OttoSchedulePage extends PolymerElement {
     this.addEventListener('unschedule-staff', (e) => this._onUnscheduleStaff(e))
   }
 
-  editOpeningHours() {
-    this.$.openingHoursDialog.open()
+  openSettings() {
+    this.$.settings.open()
   }
 
   _onScheduleStaff(e) {

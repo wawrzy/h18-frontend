@@ -13,7 +13,7 @@ import '../node_modules/@polymer/app-route/app-route'
 import '../node_modules/@polymer/iron-pages/iron-pages'
 import '../node_modules/@polymer/iron-icons/iron-icons'
 
-import '../node_modules/@polymer/paper-icon-button/paper-icon-button'
+import '../node_modules/@polymer/paper-tabs/paper-tabs'
 // Custom Elements
 import './shared-styles'
 import './otto-schedule-page'
@@ -47,7 +47,7 @@ export class OttoApp extends PolymerElement {
         <app-toolbar>
           <div main-title>Otto</div>
           <div>{{currentWeek}}</div>
-          <paper-icon-button icon="settings" on-tap="onOpeningHoursTap"></paper-icon-button>
+          <paper-icon-button icon="settings" on-tap="onSettingsTap"></paper-icon-button>
         </app-toolbar>
       </app-header>
 
@@ -84,8 +84,8 @@ export class OttoApp extends PolymerElement {
     ]
   }
 
-  onOpeningHoursTap() {
-    this.$.schedule.editOpeningHours()
+  onSettingsTap() {
+    this.$.schedule.openSettings()
   }
 
   _routePageChanged(page) {

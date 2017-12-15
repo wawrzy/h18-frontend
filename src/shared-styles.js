@@ -8,6 +8,8 @@ $_sharedStyles.innerHTML = `
       :host {
         --primary-color: var(--paper-red-500);
         --secondary-color: var(--paper-purple-700);
+        --paper-tab-ink: var(--secondary-color);
+        --paper-tabs-selection-bar-color: var(--secondary-color);
       }
       
       paper-button:not([dialog-dismiss]) {
@@ -17,6 +19,20 @@ $_sharedStyles.innerHTML = `
       paper-button[raised] {
         background-color: var(--primary-color);
         color: white;
+      }
+      
+      paper-tabs {
+        --paper-tabs: {
+          height: 64px;
+          background-color: var(--primary-color);
+        };
+      }
+      
+      paper-tab {
+        --paper-tab: {
+          text-transform: uppercase;
+          color: white;
+        }
       }
     </style>
   </template>
