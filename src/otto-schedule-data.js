@@ -31,20 +31,30 @@ export class OttoScheduleData extends PolymerElement {
   scheduleStaff(timeSlot, staff) {
     const dayId = this._findTimeSlotDayIndex(timeSlot)
     const timeSlotId = this._findTimeSlotIndex(dayId, timeSlot)
-    const staffId = this._findStaffIndex(dayId, timeSlotId, staff)
 
     this.push(`schedule.days.${dayId}.timeSlots.${timeSlotId}.scheduledStaffs`, staff)
-    this.splice(`schedule.days.${dayId}.timeSlots.${timeSlotId}.availableStaffs`, staffId, 1)
 
     // Force notifying otherwise conditional and repeat templates do not see the changes <- not sure why...
     this.notifyPath(`schedule.days.${dayId}.timeSlots.${timeSlotId}.scheduledStaffs`)
-    this.notifyPath(`schedule.days.${dayId}.timeSlots.${timeSlotId}.availableStaffs`)
+
+    // TODO: Make the actual call to the API
+  }
+
+  unscheduleStaff(timeSlot, staff) {
+    const dayId = this._findTimeSlotDayIndex(timeSlot)
+    const timeSlotId = this._findTimeSlotIndex(dayId, timeSlot)
+    const staffId = this._findStaffIndex(dayId, timeSlotId, staff)
+
+    this.splice(`schedule.days.${dayId}.timeSlots.${timeSlotId}.scheduledStaffs`, staffId, 1)
+
+    // Force notifying otherwise conditional and repeat templates do not see the changes <- not sure why...
+    this.notifyPath(`schedule.days.${dayId}.timeSlots.${timeSlotId}.scheduledStaffs`)
 
     // TODO: Make the actual call to the API
   }
 
   _findStaffIndex(dayIndex, timeSlotIndex, staff) {
-    return findIndex(this.schedule.days[dayIndex].timeSlots[timeSlotIndex].availableStaffs, staff)
+    return findIndex(this.schedule.days[dayIndex].timeSlots[timeSlotIndex].scheduledStaffs, staff)
   }
 
   _findTimeSlotIndex(dayIndex, timeSlot) {

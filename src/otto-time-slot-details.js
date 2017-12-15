@@ -3,11 +3,14 @@ import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polyme
 import {uniq} from '../node_modules/lodash/lodash'
 
 import './otto-schedule-staff'
+import './otto-staff-item'
+
+import './shared-styles'
 
 export class OttoTimeSlotDetails extends PolymerElement {
   static get template() {
     return `
-    <style>
+    <style include="shared-styles">
       :host {
         display: flex;
         flex-direction: column;
@@ -16,21 +19,24 @@ export class OttoTimeSlotDetails extends PolymerElement {
       .role {
         font-weight: bold;
       }
-
+      
       .staff {
         position: relative;
       }
 
       .staff:not(:last-of-type) {
-        margin-right: 4px;
+        margin-right: 2px;
       }
 
-      .staff:not(:last-of-type)::after {
-        position: absolute;
-        right: -4px;
-        bottom: -2px;
+      .staff:not(:first-of-type):before {
         display: block;
-        content: ',';
+        position: absolute;
+        left: -6px;
+        bottom: 50%;
+        transform: translate3d(0, 50%, 0);
+        font-weight: bold;
+        font-size: large;
+        content: '\u00B7';
       }
     </style>
     
@@ -52,7 +58,7 @@ export class OttoTimeSlotDetails extends PolymerElement {
         <div>
           <span class="role">[[role.name]]:</span>
           <template is="dom-repeat" items="{{role.staffs}}" as="staff">
-            <span class="staff">[[staff.fullName]]</span>
+            <otto-staff-item class="staff" staff="[[staff]]" on-unschedule-staff="unscheduleStaff">[[staff.fullName]]</otto-staff-item>
           </template>
         </div>
       </template>
@@ -89,6 +95,11 @@ export class OttoTimeSlotDetails extends PolymerElement {
         computed: '_computeScheduledStaffRoles(timeSlot.scheduledStaffs)'
       }
     }
+  }
+
+  unscheduleStaff(e) {
+    const payload = {bubbles: true, composed: true, detail: {timeSlot: this.timeSlot, staff: e.detail.staff}}
+    this.dispatchEvent(new CustomEvent('unschedule-staff', payload))
   }
 
   _computeDay(timeSlot) {

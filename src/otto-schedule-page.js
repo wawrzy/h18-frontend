@@ -26,10 +26,15 @@ export class OttoSchedulePage extends PolymerElement {
     super.ready()
 
     this.addEventListener('schedule-staff', (e) => this._onScheduleStaff(e))
+    this.addEventListener('unschedule-staff', (e) => this._onUnscheduleStaff(e))
   }
 
   _onScheduleStaff(e) {
     this.$.schedule.scheduleStaff(e.detail.timeSlot, e.detail.staff)
+  }
+
+  _onUnscheduleStaff(e) {
+    this.$.schedule.unscheduleStaff(e.detail.timeSlot, e.detail.staff)
   }
 }
 
