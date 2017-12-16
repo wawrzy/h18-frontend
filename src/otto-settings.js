@@ -16,14 +16,11 @@ export class OttoSettings extends PolymerElement {
         min-width: 320px;
       }
       
-      .settings-section {
+      .settings-sections > div {
         display: flex;
         flex-direction: column;
         
         padding: 0 24px;
-      }
-      
-      paper-tab {
       }
     </style>
     
@@ -32,11 +29,11 @@ export class OttoSettings extends PolymerElement {
       <paper-tab>Staffs</paper-tab>
     </paper-tabs>
     
-    <iron-pages selected="[[section]]">
+    <iron-pages selected="[[section]]" class="settings-sections">
       <div class="settings-section">
         <template is="dom-repeat" items="{{schedule.days}}" as="day">
           <otto-opening-hours day="[[day]]"></otto-opening-hours>
-         </template>
+        </template>
       </div>
       <div class="settings-section">
       </div>

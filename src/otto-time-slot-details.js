@@ -1,9 +1,7 @@
 import {Element as PolymerElement} from '../node_modules/@polymer/polymer/polymer-element'
 
-import {uniq} from '../node_modules/lodash/lodash'
-
 import './otto-schedule-staff'
-import './otto-staff-item'
+import './otto-staff-list'
 
 import './shared-styles'
 
@@ -54,14 +52,7 @@ export class OttoTimeSlotDetails extends PolymerElement {
 
     <template is="dom-if" if="{{anyStaffScheduled}}">
       <h2>Scheduled staff</h2>
-      <template is="dom-repeat" items="{{scheduledStaffRoles}}" as="role">
-        <div>
-          <span class="role">[[role.name]]:</span>
-          <template is="dom-repeat" items="{{role.staffs}}" as="staff">
-            <otto-staff-item class="staff" staff="[[staff]]" on-unschedule-staff="unscheduleStaff">[[staff.fullName]]</otto-staff-item>
-          </template>
-        </div>
-      </template>
+      <otto-staff-list staffs="[[timeSlot.scheduledStaffs]]" on-remove-staff="unscheduleStaff"></otto-staff-list>
     </template>
     
     <otto-schedule-staff time-slot="[[timeSlot]]"></otto-schedule-staff>
@@ -89,10 +80,6 @@ export class OttoTimeSlotDetails extends PolymerElement {
       anyStaffScheduled: {
         type: Boolean,
         computed: '_computeAnyStaffScheduled(timeSlot.scheduledStaffs)'
-      },
-      scheduledStaffRoles: {
-        type: Array,
-        computed: '_computeScheduledStaffRoles(timeSlot.scheduledStaffs)'
       }
     }
   }
@@ -116,17 +103,6 @@ export class OttoTimeSlotDetails extends PolymerElement {
 
   _computeAnyStaffScheduled(scheduledStaffs) {
     return scheduledStaffs.length > 0
-  }
-
-  _computeScheduledStaffRoles(scheduledStaffs) {
-    const roles = uniq(scheduledStaffs.map((staff) => staff.role))
-    return roles.map((role) => {
-      const staffs = scheduledStaffs.filter((staff) => staff.role === role)
-      return {
-        name: role,
-        staffs
-      }
-    })
   }
 }
 

@@ -8,7 +8,7 @@ export class OttoStaffItem extends PolymerElement {
   static get template() {
     return `
     <style include="shared-styles">
-      #unscheduleBtn {
+      #staffBtn {
         position: relative;
         padding: 6px 8px;
         margin: 0;
@@ -16,7 +16,7 @@ export class OttoStaffItem extends PolymerElement {
         text-transform: none;
       }
       
-      #unscheduleBtn:hover:after {
+      #staffBtn:hover:after {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -35,7 +35,7 @@ export class OttoStaffItem extends PolymerElement {
       }
     </style>
     
-    <paper-button id="unscheduleBtn">[[staff.fullName]]</paper-button>
+    <paper-button id="staffBtn">[[staff.fullName]]</paper-button>
     `
   }
 
@@ -46,17 +46,6 @@ export class OttoStaffItem extends PolymerElement {
         required: true
       }
     }
-  }
-
-  ready() {
-    super.ready()
-
-    this.$.unscheduleBtn.addEventListener('click', () => this._unscheduleStaff())
-  }
-
-  _unscheduleStaff() {
-    const payload = {detail: {staff: this.staff}}
-    this.dispatchEvent(new CustomEvent('unschedule-staff', payload))
   }
 }
 
