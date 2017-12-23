@@ -4,6 +4,8 @@ import {findIndex, random, range} from '../node_modules/lodash/lodash'
 
 import moment from '../node_modules/moment/moment'
 
+import Otto from './services/Otto'
+
 import Day from './models/Day'
 import TimeSlot from './models/TimeSlot'
 import Schedule from './models/Schedule'
@@ -33,11 +35,9 @@ export class OttoScheduleData extends PolymerElement {
     const timeSlotId = this._findTimeSlotIndex(dayId, timeSlot)
 
     this.push(`schedule.days.${dayId}.timeSlots.${timeSlotId}.scheduledStaffs`, staff)
-
-    // Force notifying otherwise conditional and repeat templates do not see the changes <- not sure why...
     this.notifyPath(`schedule.days.${dayId}.timeSlots.${timeSlotId}.scheduledStaffs`)
 
-    // TODO: Make the actual call to the API
+    Otto.scheduleStaff(timeSlot, staff)
   }
 
   unscheduleStaff(timeSlot, staff) {
@@ -46,11 +46,9 @@ export class OttoScheduleData extends PolymerElement {
     const staffId = this._findStaffIndex(dayId, timeSlotId, staff)
 
     this.splice(`schedule.days.${dayId}.timeSlots.${timeSlotId}.scheduledStaffs`, staffId, 1)
-
-    // Force notifying otherwise conditional and repeat templates do not see the changes <- not sure why...
     this.notifyPath(`schedule.days.${dayId}.timeSlots.${timeSlotId}.scheduledStaffs`)
 
-    // TODO: Make the actual call to the API
+    Otto.unscheduleStaff(timeSlot, staff)
   }
 
   changeOpeningHours(day, openAt, closedAt) {
@@ -70,7 +68,7 @@ export class OttoScheduleData extends PolymerElement {
     this.notifyPath(`schedule.latestClosedHour`)
     this.notifyPath(`schedule.openingHours`)
 
-    // TODO: Make the actual call to the API
+    Otto.changeOpeningHours(day)
   }
 
   _findStaffIndex(dayIndex, timeSlotIndex, staff) {
@@ -90,29 +88,7 @@ export class OttoScheduleData extends PolymerElement {
   }
 
   _weekChanged(week) {
-    this.schedule = this._generateSchedule(week)
-  }
-
-  _generateSchedule(week) {
-    const days = this._generateDaysForWeek(week)
-    return new Schedule(days)
-  }
-
-  _generateDaysForWeek(week) {
-    return range(7).map((day) => {
-      const dayDatetime = moment(week).add(day, 'day')
-      const timeSlots = this._generateTimeSlotsForDay(dayDatetime)
-      return new Day(dayDatetime, timeSlots)
-    })
-  }
-
-  _generateTimeSlotsForDay(day) {
-    const openAt = random(4, 9)
-    const closedAt = random(13, 22)
-    return range(openAt, closedAt).map((hour) => {
-      const openingHourDatetime = moment(day).startOf('day').add(hour, 'hours')
-      return new TimeSlot(openingHourDatetime)
-    })
+    this.schedule = Otto.getSchedule(week)
   }
 }
 
