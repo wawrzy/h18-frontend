@@ -38,6 +38,7 @@ export class OttoSchedulePage extends PolymerElement {
 
     this.addEventListener('schedule-staff', (e) => this._onScheduleStaff(e))
     this.addEventListener('unschedule-staff', (e) => this._onUnscheduleStaff(e))
+    this.addEventListener('change-opening-hours', (e) => this._onChangeOpeningHours(e))
   }
 
   openSettings() {
@@ -50,6 +51,10 @@ export class OttoSchedulePage extends PolymerElement {
 
   _onUnscheduleStaff(e) {
     this.$.schedule.unscheduleStaff(e.detail.timeSlot, e.detail.staff)
+  }
+
+  _onChangeOpeningHours(e) {
+    this.$.schedule.changeOpeningHours(e.detail.day, e.detail.openAt, e.detail.closedAt)
   }
 }
 

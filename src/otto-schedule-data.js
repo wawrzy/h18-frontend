@@ -53,6 +53,26 @@ export class OttoScheduleData extends PolymerElement {
     // TODO: Make the actual call to the API
   }
 
+  changeOpeningHours(day, openAt, closedAt) {
+    if (openAt) {
+      day.openAt = openAt
+    }
+
+    if (closedAt) {
+      day.closedAt = closedAt
+    }
+
+    const dayId = findIndex(this.schedule.days, day)
+    this.set(`schedule.days.${dayId}.timeSlots`, this.schedule.days[dayId].timeSlots.slice())
+    this.notifyPath(`schedule.days.${dayId}.openAt`)
+    this.notifyPath(`schedule.days.${dayId}.closedAt`)
+    this.notifyPath(`schedule.earliestOpenHour`)
+    this.notifyPath(`schedule.latestClosedHour`)
+    this.notifyPath(`schedule.openingHours`)
+
+    // TODO: Make the actual call to the API
+  }
+
   _findStaffIndex(dayIndex, timeSlotIndex, staff) {
     return findIndex(this.schedule.days[dayIndex].timeSlots[timeSlotIndex].scheduledStaffs, staff)
   }

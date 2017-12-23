@@ -59,8 +59,41 @@ export class OttoOpeningHours extends PolymerElement {
       hours: {
         type: Array,
         computed: '_computeHours()'
+      },
+      selectedOpenAt: {
+        type: Number
+      },
+      selectedClosedAt: {
+        type: Number
       }
     }
+  }
+
+  static get observers() {
+    return [
+      'selectedOpenAtChanged(selectedOpenAt)',
+      'selectedCloseAtChanged(selectedCloseAt)'
+    ]
+  }
+
+  selectedOpenAtChanged(selectedOpenAt) {
+    if (!selectedOpenAt) return
+
+    const openAt = this._formatOpeningHours(selectedOpenAt)
+    const payload = {bubbles: true, composed: true, detail: {day: this.day, openAt}}
+    this.dispatchEvent(new CustomEvent('change-opening-hours', payload))
+  }
+
+  selectedCloseAtChanged(selectedCloseAt) {
+    if (!selectedCloseAt) return
+
+    const closedAt = this._formatOpeningHours(selectedCloseAt)
+    const payload = {bubbles: true, composed: true, detail: {day: this.day, closedAt}}
+    this.dispatchEvent(new CustomEvent('change-opening-hours', payload))
+  }
+
+  _formatOpeningHours(hour) {
+    return moment(`${this.day.datetime.format('YYYY-MM-DD')} ${hour}`, 'YYYY-MM-DD h a')
   }
 
   _computeHours() {

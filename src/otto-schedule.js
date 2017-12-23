@@ -68,13 +68,13 @@ export class OttoSchedule extends PolymerElement {
       schedule: Object,
       openingHours: {
         type: Array,
-        computed: '_computeOpeningHours(schedule)'
+        computed: '_computeOpeningHours(schedule.*)'
       }
     }
   }
 
   _computeOpeningHours(schedule) {
-    return schedule.openingHours.map((openingHour) => openingHour.datetime.format('h a'))
+    return schedule.base.openingHours.map((openingHour) => openingHour.datetime.format('h a'))
   }
 }
 
