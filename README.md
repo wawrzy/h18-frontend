@@ -14,7 +14,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installing
 
 ```sh
-yarn global add polymer
+npm -g install polymer-cli
 yarn install
 ```
 
