@@ -14,12 +14,24 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installing
 
 ```sh
-npm -g install polymer-cli
 yarn install
 ```
 
 ### Running
 
 ```sh
-polymer serve --npm
+yarn start
 ```
+
+### Building
+
+```sh
+yarn run build
+```
+
+### Testing
+
+```sh
+yarn run test
+```
+
