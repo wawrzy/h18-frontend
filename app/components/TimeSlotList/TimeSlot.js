@@ -1,31 +1,60 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withStyles } from 'material-ui/styles'
+
+import Otto from 'services/Otto'
 
 import Cell from 'components/Cell'
+import ScheduledStaff from 'components/ScheduledStaff'
+import StaffInfoDialog from 'components/StaffInfoDialog'
 
-const TimeSlot = ({ classes, timeSlot }) => (
-  <Cell>
-    { timeSlot.scheduledStaffs.map((staff) => (<div className={classes.scheduledStaff} key={`${timeSlot.datetime}-${staff.firstName}-${staff.lastName}`}>{staff.firstName}</div>))}
-  </Cell>
-)
+class TimeSlot extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { open: false, staff: null }
+
+    this.renderScheduledStaff = this.renderScheduledStaff.bind(this)
+    this.showStaff = this.showStaff.bind(this)
+    this.unscheduleStaff = this.unscheduleStaff.bind(this)
+    this.closeStaffInfoDialog = this.closeStaffInfoDialog.bind(this)
+  }
+
+  showStaff(staff) {
+    const { timeSlot } = this.props
+    this.setState({ ...this.state, timeSlot, staff, open: true })
+  }
+
+  unscheduleStaff(staff) {
+    const { timeSlot } = this.props
+    Otto.unscheduleStaff(timeSlot, staff)
+  }
+
+  closeStaffInfoDialog() {
+    this.setState({ ...this.state, open: false, staff: null })
+  }
+
+  renderScheduledStaff(staff) {
+    const { timeSlot } = this.props
+
+    return (
+      <ScheduledStaff key={`${timeSlot.datetime}-${staff.firstName}-${staff.lastName}`} staff={staff} onShowStaff={this.showStaff} onUnscheduleStaff={this.unscheduleStaff} />
+    )
+  }
+
+  render() {
+    const { timeSlot } = this.props
+    const { open, staff } = this.state
+
+    return (
+      <Cell>
+        { timeSlot.scheduledStaffs.map((scheduledStaff) => this.renderScheduledStaff(scheduledStaff)) }
+        { staff && <StaffInfoDialog open={open} staff={staff} timeSlot={timeSlot} onClose={this.closeStaffInfoDialog} /> }
+      </Cell>
+    )
+  }
+}
 
 TimeSlot.propTypes = {
-  classes: PropTypes.object.isRequired,
   timeSlot: PropTypes.object.isRequired,
 }
 
-const styles = (theme) => ({
-  scheduledStaff: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.accent['300'],
-    border: '1px solid white',
-    borderRadius: '3px',
-    color: 'white',
-    fontSize: theme.font.size.small,
-    height: '100%',
-    padding: theme.spacing.unit / 2,
-  },
-})
-
-export default withStyles(styles)(TimeSlot)
+export default TimeSlot

@@ -25,12 +25,14 @@ Cell.defaultProps = {
   disabled: false,
 }
 
-const styles = () => ({
+const styles = (theme) => ({
   root: {
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
-    minHeight: 32,
+    height: theme.grid.cell.height,
+    paddingTop: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit,
     borderBottom: '1px solid lightgray',
     backgroundColor: 'rgba(21, 241, 12, 0.1)',
     '&:not($disabled)': {

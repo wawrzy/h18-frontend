@@ -16,6 +16,16 @@ const theme = createMuiTheme({
       large: '16px',
     },
   },
+  typography: {
+    title: {
+      color: 'white',
+    },
+  },
+  grid: {
+    cell: {
+      height: 40,
+    },
+  },
 })
 
 export default theme
