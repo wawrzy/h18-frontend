@@ -4,9 +4,9 @@ import TimeSlotAssembler from './TimeSlotAssembler'
 
 const fromJson = (schedule) => {
   const days = schedule.days.map((day) => {
-    const date = moment(day.datetime)
+    const datetime = moment(day.datetime)
     const timeSlots = TimeSlotAssembler.fromJson(day.timeSlots)
-    return { datetime: date, timeSlots }
+    return { datetime, timeSlots }
   })
   return { days }
 }

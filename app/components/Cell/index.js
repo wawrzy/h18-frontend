@@ -27,6 +27,9 @@ Cell.defaultProps = {
 
 const styles = () => ({
   root: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
     minHeight: 32,
     borderBottom: '1px solid lightgray',
     backgroundColor: 'rgba(21, 241, 12, 0.1)',
