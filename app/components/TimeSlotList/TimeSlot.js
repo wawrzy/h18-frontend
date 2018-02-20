@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { difference } from 'lodash'
+
 import Otto from 'services/Otto'
 
 import Cell from 'components/Cell'
@@ -11,7 +13,7 @@ import ScheduleStaffDialog from 'components/ScheduleStaffDialog'
 class TimeSlot extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { staffDialogOpen: false, scheduleDialogOpen: false, staff: null, addedStaffs: [] }
+    this.state = { staffDialogOpen: false, scheduleDialogOpen: false, staff: null, scheduledStaffs: [], unscheduledStaffs: [] }
 
     this.showScheduleStaffDialog = this.showScheduleStaffDialog.bind(this)
     this.renderScheduledStaff = this.renderScheduledStaff.bind(this)
@@ -34,14 +36,18 @@ class TimeSlot extends React.Component {
     const { timeSlot } = this.props
     Otto.scheduleStaff(timeSlot, staff).then(() => {
       const state = { ...this.state, scheduleDialogOpen: false }
-      state.addedStaffs.push(staff)
+      state.scheduledStaffs.push(staff)
       this.setState(state)
     })
   }
 
   unscheduleStaff(staff) {
     const { timeSlot } = this.props
-    Otto.unscheduleStaff(timeSlot, staff)
+    Otto.unscheduleStaff(timeSlot, staff).then(() => {
+      const state = { ...this.state }
+      state.unscheduledStaffs.push(staff)
+      this.setState(state)
+    })
   }
 
   closeStaffDialog() {
@@ -63,7 +69,8 @@ class TimeSlot extends React.Component {
   render() {
     const { timeSlot } = this.props
     const { staffDialogOpen, scheduleDialogOpen, staff } = this.state
-    const scheduledStaffs = timeSlot.scheduledStaffs.concat(this.state.addedStaffs)
+    let scheduledStaffs = timeSlot.scheduledStaffs.concat(this.state.scheduledStaffs)
+    scheduledStaffs = difference(scheduledStaffs, this.state.unscheduledStaffs)
 
     return (
       <div role="button" tabIndex="0" onClick={this.showScheduleStaffDialog}>
