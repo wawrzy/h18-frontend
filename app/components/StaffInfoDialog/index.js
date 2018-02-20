@@ -9,15 +9,13 @@ import Dialog, {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog'
-import Slide from 'material-ui/transitions/Slide'
 
-const Transition = (props) => (<Slide diretion="up" {...props} />)
 
 const StaffInfoDialog = ({ timeSlot, staff, open, onClose, classes }) => {
   const title = `${timeSlot.datetime.format('MMM Do - hh:mm')}`
 
   return (
-    <Dialog keepMounted open={open} transition={Transition} onClose={onClose} aria-labelledby="staff-dialog-title" aria-describedby="staff-dialog-description">
+    <Dialog keepMounted open={open} onClose={onClose} aria-labelledby="staff-dialog-title" aria-describedby="staff-dialog-description">
       <DialogTitle id="staff-dialog-title" className={classes.staffDialogTitle}>{title}</DialogTitle>
       <DialogContent className={classes.staffDialogContent}>
         <DialogContentText id="staff-dialog-description">

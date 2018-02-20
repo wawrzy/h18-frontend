@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 import ScheduleAssembler from './ScheduleAssembler'
 
 const API_HOST = process.env.API_HOST
@@ -24,13 +26,13 @@ export default class Otto {
   }
 
   static scheduleStaff(timeSlot, staff) {
-    const week = timeSlot.datetime.startOf('week')
+    const week = moment(timeSlot.datetime).startOf('week')
     const endpoint = `schedules/${week.format('YYYY-MM-DD')}/staffs`
     const payload = {
       ...staff,
-      timeSlot: timeSlot.datetime.format('YYYY-MM-DD"T"hh:mm:ss.SSS'),
+      timeSlot: timeSlot.datetime.format('YYYY-MM-DD[T]hh:mm:ss.SSS'),
     }
-    post(endpoint, payload)
+    return post(endpoint, payload)
   }
 
   static unscheduleStaff(timeSlot, staff) {

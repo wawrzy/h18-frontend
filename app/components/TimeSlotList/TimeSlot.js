@@ -6,21 +6,37 @@ import Otto from 'services/Otto'
 import Cell from 'components/Cell'
 import ScheduledStaff from 'components/ScheduledStaff'
 import StaffInfoDialog from 'components/StaffInfoDialog'
+import ScheduleStaffDialog from 'components/ScheduleStaffDialog'
 
 class TimeSlot extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { open: false, staff: null }
+    this.state = { staffDialogOpen: false, scheduleDialogOpen: false, staff: null, addedStaffs: [] }
 
+    this.showScheduleStaffDialog = this.showScheduleStaffDialog.bind(this)
     this.renderScheduledStaff = this.renderScheduledStaff.bind(this)
     this.showStaff = this.showStaff.bind(this)
+    this.scheduleStaff = this.scheduleStaff.bind(this)
     this.unscheduleStaff = this.unscheduleStaff.bind(this)
-    this.closeStaffInfoDialog = this.closeStaffInfoDialog.bind(this)
+    this.closeStaffDialog = this.closeStaffDialog.bind(this)
+    this.closeScheduleDialog = this.closeScheduleDialog.bind(this)
   }
 
   showStaff(staff) {
+    this.setState({ ...this.state, staff, staffDialogOpen: true })
+  }
+
+  showScheduleStaffDialog() {
+    this.setState({ ...this.state, scheduleDialogOpen: true })
+  }
+
+  scheduleStaff(staff) {
     const { timeSlot } = this.props
-    this.setState({ ...this.state, timeSlot, staff, open: true })
+    Otto.scheduleStaff(timeSlot, staff).then(() => {
+      const state = { ...this.state, scheduleDialogOpen: false }
+      state.addedStaffs.push(staff)
+      this.setState(state)
+    })
   }
 
   unscheduleStaff(staff) {
@@ -28,8 +44,12 @@ class TimeSlot extends React.Component {
     Otto.unscheduleStaff(timeSlot, staff)
   }
 
-  closeStaffInfoDialog() {
-    this.setState({ ...this.state, open: false, staff: null })
+  closeStaffDialog() {
+    this.setState({ ...this.state, staffDialogOpen: false, staff: null })
+  }
+
+  closeScheduleDialog() {
+    this.setState({ ...this.state, scheduleDialogOpen: false })
   }
 
   renderScheduledStaff(staff) {
@@ -42,13 +62,17 @@ class TimeSlot extends React.Component {
 
   render() {
     const { timeSlot } = this.props
-    const { open, staff } = this.state
+    const { staffDialogOpen, scheduleDialogOpen, staff } = this.state
+    const scheduledStaffs = timeSlot.scheduledStaffs.concat(this.state.addedStaffs)
 
     return (
-      <Cell>
-        { timeSlot.scheduledStaffs.map((scheduledStaff) => this.renderScheduledStaff(scheduledStaff)) }
-        { staff && <StaffInfoDialog open={open} staff={staff} timeSlot={timeSlot} onClose={this.closeStaffInfoDialog} /> }
-      </Cell>
+      <div role="button" tabIndex="0" onClick={this.showScheduleStaffDialog}>
+        <Cell>
+          { scheduledStaffs.map((scheduledStaff) => this.renderScheduledStaff(scheduledStaff)) }
+          { <ScheduleStaffDialog open={scheduleDialogOpen} timeSlot={timeSlot} onClose={this.closeScheduleDialog} onConfirm={this.scheduleStaff} /> }
+          { staff && <StaffInfoDialog open={staffDialogOpen} staff={staff} timeSlot={timeSlot} onClose={this.closeStaffDialog} /> }
+        </Cell>
+      </div>
     )
   }
 }
