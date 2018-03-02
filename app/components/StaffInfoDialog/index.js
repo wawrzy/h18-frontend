@@ -12,7 +12,7 @@ import Dialog, {
 
 
 const StaffInfoDialog = ({ timeSlot, staff, open, onClose, classes }) => {
-  const title = `${timeSlot.datetime.format('MMM Do - hh:mm')}`
+  const title = `${timeSlot.datetime.format('MMM Do - HH:mm')}`
 
   return (
     <Dialog keepMounted open={open} onClose={onClose} aria-labelledby="staff-dialog-title" aria-describedby="staff-dialog-description">

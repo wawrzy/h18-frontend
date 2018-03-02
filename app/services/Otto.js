@@ -30,7 +30,7 @@ export default class Otto {
     const endpoint = `schedules/${week.format('YYYY-MM-DD')}/staffs`
     const payload = {
       ...staff,
-      timeSlot: timeSlot.datetime.format('YYYY-MM-DD[T]hh:mm:ss.SSS'),
+      timeSlot: timeSlot.datetime.format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
     }
     return post(endpoint, payload)
   }
