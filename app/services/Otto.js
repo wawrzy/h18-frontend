@@ -36,8 +36,9 @@ export default class Otto {
   }
 
   static unscheduleStaff(timeSlot, staff) {
-    const week = timeSlot.datetime.startOf('week')
-    const endpoint = `schedules/${week.format('YYYY-MM-DD')}/staffs/${timeSlot.datetime.format('hh-mm')}/${staff.firstName}/${staff.lastName}`
+    const time = timeSlot.datetime.format('HH-mm')
+    const date = timeSlot.datetime.format('YYYY-MM-DD')
+    const endpoint = `schedules/${date}/staffs/${time}/${staff.firstName}/${staff.lastName}`
     return del(endpoint)
   }
 }
