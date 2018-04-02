@@ -1,5 +1,9 @@
 # Otto - Schedule all the things!
 
+This app is connected to this [API](https://otto-glo.herokuapp.com/) hosted by Heroku.
+
+yarn start or npm start will run project on real API address. 
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
