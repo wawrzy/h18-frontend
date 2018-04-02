@@ -9,20 +9,37 @@ import Filler from 'components/Cell/Filler'
 import TimeSlotList from 'components/TimeSlotList'
 import Header from 'components/Header'
 
-const Day = ({ classes, day, earliestOpeningHour, latestClosingHour }) => {
-  const openingHour = calculateOpeningHour(day)
-  const closingHour = calculateClosingHour(day)
 
-  return (
-    <Grid className={classes.root} item xs>
-      <Grid container direction="column" spacing={0}>
-        <Header title={`${day.datetime.date()}`} subtitle={day.datetime.format('ddd')} />
-        <Filler first={earliestOpeningHour - 1} last={openingHour} />
-        <TimeSlotList timeSlots={day.timeSlots} />
-        <Filler first={closingHour} last={latestClosingHour} />
+class Day extends React.Component {
+  constructor(props) {
+    super(props)
+    this.uselessFunction = this.uselessFunction.bind(this)
+  }
+
+  uselessFunction() {
+
+  }
+
+  render() {
+    const classes = this.props.classes
+    const day = this.props.day
+    const earliestOpeningHour = this.props.earliestOpeningHour
+    const latestClosingHour = this.props.latestClosingHour
+
+    const openingHour = calculateOpeningHour(day)
+    const closingHour = calculateClosingHour(day)
+
+    return (
+      <Grid className={classes.root} item xs>
+        <Grid container direction="column" spacing={0}>
+          <Header title={`${day.datetime.date()}`} subtitle={day.datetime.format('ddd')} day={day} date={day.datetime.format('YYYY-MM-DD')} />
+          <Filler first={earliestOpeningHour - 1} last={openingHour} />
+          <TimeSlotList timeSlots={day.timeSlots} />
+          <Filler first={closingHour} last={latestClosingHour} />
+        </Grid>
       </Grid>
-    </Grid>
-  )
+    )
+  }
 }
 
 Day.propTypes = {
