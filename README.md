@@ -1,5 +1,7 @@
 # Otto - Schedule all the things!
 
+This app is connected to this [API](https://otto-glo.herokuapp.com/) hosted by Heroku.
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
