@@ -41,4 +41,9 @@ export default class Otto {
     const endpoint = `schedules/${date}/staffs/${time}/${staff.firstName}/${staff.lastName}`
     return del(endpoint)
   }
+
+  static unscheduleAllStaff(date) {
+    const endpoint = `schedules/${date}/staffs`
+    return del(endpoint)
+  }
 }
