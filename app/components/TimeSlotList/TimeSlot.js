@@ -52,8 +52,17 @@ class TimeSlot extends React.Component {
   }
 
   changeSchedule(staff, oldStaff) {
-    this.unscheduleStaff(oldStaff)
-    this.scheduleStaff(staff)
+    const { timeSlot } = this.props
+    Otto.unscheduleStaff(timeSlot, oldStaff).then(() => {
+      let state = { ...this.state }
+      state.unscheduledStaffs.push(oldStaff)
+      Otto.scheduleStaff(timeSlot, staff).then(() => {
+        state = { ...state, scheduleDialogOpen: false }
+        state.scheduledStaffs.push(staff)
+        this.setState(state)
+        location.reload()
+      })
+    })
   }
 
   closeStaffDialog() {
