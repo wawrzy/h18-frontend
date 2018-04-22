@@ -17,9 +17,7 @@ class Header extends React.Component {
   handleClearAll(e) {
     e.preventDefault()
     Otto.unscheduleAllStaff(this.props.date).then(() => {
-      // const state = { ...this.state, scheduleDialogOpen: false }
-      // state.scheduledStaffs.push(staff)
-      // this.setState(state)
+      location.reload()
     })
   }
 

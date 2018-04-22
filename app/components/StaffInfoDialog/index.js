@@ -6,29 +6,58 @@ import Button from 'material-ui/Button'
 import Dialog, {
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog'
+import TextField from 'material-ui/TextField'
+
+class StaffInfoDialog extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { firstName: this.props.staff.firstName, lastName: this.props.staff.lastName, role: this.props.staff.role }
+    this.sauv = { firstName: this.props.staff.firstName, lastName: this.props.staff.lastName, role: this.props.staff.role }
+
+    this.submit = this.submit.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+  }
+
+  handleChange(field) {
+    return (e) => this.setState({ ...this.state, [field]: e.target.value })
+  }
+
+  submit(e) {
+    e.preventDefault()
+
+    const { onConfirm } = this.props
+    const { firstName, lastName, role } = this.state
+    if (firstName.trim() === '' || lastName.trim() === '' || role.trim() === '') return
+
+    onConfirm({ firstName, lastName, role }, this.sauv)
+    this.setState({ ...this.state, firstName: '', lastName: '', role: '' })
+  }
+
+  render() {
+    const { timeSlot, staff, open, onClose, classes } = this.props
+    const title = `${timeSlot.datetime.format('MMM Do - HH:mm')}`
 
 
-const StaffInfoDialog = ({ timeSlot, staff, open, onClose, classes }) => {
-  const title = `${timeSlot.datetime.format('MMM Do - HH:mm')}`
-
-  return (
-    <Dialog keepMounted open={open} onClose={onClose} aria-labelledby="staff-dialog-title" aria-describedby="staff-dialog-description">
-      <DialogTitle id="staff-dialog-title" className={classes.staffDialogTitle}>{title}</DialogTitle>
-      <DialogContent className={classes.staffDialogContent}>
-        <DialogContentText id="staff-dialog-description">
-          <strong>First name: </strong>{staff.firstName}<br />
-          <strong>Last name: </strong>{staff.lastName}<br />
-          <strong>Role: </strong>{staff.role}<br />
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">Close</Button>
-      </DialogActions>
-    </Dialog>
-  )
+    return (
+      <Dialog keepMounted open={open} onClose={onClose} aria-labelledby="staff-dialog-title" aria-describedby="staff-dialog-description">
+        <form onSubmit={this.submit}>
+          <DialogTitle id="staff-dialog-title" className={classes.staffDialogTitle}>{title}</DialogTitle>
+          <DialogContent className={classes.staffDialogContent} id="staff-dialog-description">
+            <strong>First name: </strong><TextField defaultValue={staff.firstName} onChange={this.handleChange('firstName')} /><br />
+            <strong>Last name: </strong><TextField defaultValue={staff.lastName} onChange={this.handleChange('lastName')} /><br />
+            <strong>Role: </strong><TextField defaultValue={staff.role} onChange={this.handleChange('role')} /><br />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={onClose} color="primary">Close</Button>
+            <Button type="submit" color="primary">Confirm</Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+    )
+  }
 }
 
 StaffInfoDialog.propTypes = {
@@ -36,6 +65,7 @@ StaffInfoDialog.propTypes = {
   staff: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
+  onConfirm: PropTypes.func,
   classes: PropTypes.object.isRequired,
 }
 
