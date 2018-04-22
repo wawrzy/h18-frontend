@@ -20,6 +20,7 @@ class TimeSlot extends React.Component {
     this.showStaff = this.showStaff.bind(this)
     this.scheduleStaff = this.scheduleStaff.bind(this)
     this.unscheduleStaff = this.unscheduleStaff.bind(this)
+    this.changeSchedule = this.changeSchedule.bind(this)
     this.closeStaffDialog = this.closeStaffDialog.bind(this)
     this.closeScheduleDialog = this.closeScheduleDialog.bind(this)
   }
@@ -50,6 +51,11 @@ class TimeSlot extends React.Component {
     })
   }
 
+  changeSchedule(staff, oldStaff) {
+    this.unscheduleStaff(oldStaff)
+    this.scheduleStaff(staff)
+  }
+
   closeStaffDialog() {
     this.setState({ ...this.state, staffDialogOpen: false, staff: null })
   }
@@ -77,7 +83,7 @@ class TimeSlot extends React.Component {
         <Cell>
           { scheduledStaffs.map((scheduledStaff) => this.renderScheduledStaff(scheduledStaff)) }
           { <ScheduleStaffDialog open={scheduleDialogOpen} timeSlot={timeSlot} onClose={this.closeScheduleDialog} onConfirm={this.scheduleStaff} /> }
-          { staff && <StaffInfoDialog open={staffDialogOpen} staff={staff} timeSlot={timeSlot} onClose={this.closeStaffDialog} /> }
+          { staff && <StaffInfoDialog open={staffDialogOpen} staff={staff} timeSlot={timeSlot} onClose={this.closeStaffDialog} onConfirm={this.changeSchedule} /> }
         </Cell>
       </div>
     )
