@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
+import { CirclePicker } from 'react-color'
 
 import Button from 'material-ui/Button'
 import Dialog, {
@@ -14,26 +15,31 @@ class StaffInfoDialog extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { firstName: this.props.staff.firstName, lastName: this.props.staff.lastName, role: this.props.staff.role }
-    this.sauv = { firstName: this.props.staff.firstName, lastName: this.props.staff.lastName, role: this.props.staff.role }
+    this.state = { firstName: this.props.staff.firstName, lastName: this.props.staff.lastName, role: this.props.staff.role, color: this.props.staff.color }
+    this.sauv = { firstName: this.props.staff.firstName, lastName: this.props.staff.lastName, role: this.props.staff.role, color: this.props.staff.color }
 
     this.submit = this.submit.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleColorChange = this.handleColorChange.bind(this)
   }
 
   handleChange(field) {
     return (e) => this.setState({ ...this.state, [field]: e.target.value })
   }
 
+  handleColorChange(color) {
+    this.setState({ ...this.state, color: color.hex })
+  }
+
   submit(e) {
     e.preventDefault()
 
     const { onConfirm } = this.props
-    const { firstName, lastName, role } = this.state
+    const { firstName, lastName, role, color } = this.state
     if (firstName.trim() === '' || lastName.trim() === '' || role.trim() === '') return
 
-    onConfirm({ firstName, lastName, role }, this.sauv)
-    this.setState({ ...this.state, firstName: '', lastName: '', role: '' })
+    onConfirm({ firstName, lastName, role, color }, this.sauv)
+    this.setState({ ...this.state, firstName: '', lastName: '', role: '', color: '' })
   }
 
   render() {
@@ -49,6 +55,7 @@ class StaffInfoDialog extends React.Component {
             <strong>First name: </strong><TextField defaultValue={staff.firstName} onChange={this.handleChange('firstName')} /><br />
             <strong>Last name: </strong><TextField defaultValue={staff.lastName} onChange={this.handleChange('lastName')} /><br />
             <strong>Role: </strong><TextField defaultValue={staff.role} onChange={this.handleChange('role')} /><br />
+            <CirclePicker color={this.state.color} onChange={this.handleColorChange} />
           </DialogContent>
           <DialogActions>
             <Button onClick={onClose} color="primary">Close</Button>

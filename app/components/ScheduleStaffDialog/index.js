@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
+import { CirclePicker } from 'react-color'
 
 import Button from 'material-ui/Button'
 import Dialog, {
@@ -13,25 +14,30 @@ import TextField from 'material-ui/TextField'
 class ScheduleStaffDialog extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { firstName: '', lastName: '', role: '' }
+    this.state = { firstName: '', lastName: '', role: '', color: '#f44336' }
 
     this.submit = this.submit.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleColorChange = this.handleColorChange.bind(this)
   }
 
   handleChange(field) {
     return (e) => this.setState({ ...this.state, [field]: e.target.value })
   }
 
+  handleColorChange(color) {
+    this.setState({ ...this.state, color: color.hex })
+  }
+
   submit(e) {
     e.preventDefault()
 
     const { onConfirm } = this.props
-    const { firstName, lastName, role } = this.state
+    const { firstName, lastName, role, color } = this.state
     if (firstName.trim() === '' || lastName.trim() === '' || role.trim() === '') return
 
-    onConfirm({ firstName, lastName, role })
-    this.setState({ ...this.state, firstName: '', lastName: '', role: '' })
+    onConfirm({ firstName, lastName, role, color })
+    this.setState({ ...this.state, firstName: '', lastName: '', role: '', color: '' })
   }
 
   render() {
@@ -47,6 +53,7 @@ class ScheduleStaffDialog extends React.Component {
             <TextField required label="First name" value={this.state.firstName} onChange={this.handleChange('firstName')} margin="normal" /><br />
             <TextField required label="Last name" value={this.state.lastName} onChange={this.handleChange('lastName')} margin="normal" /><br />
             <TextField required label="Role" value={this.state.role} onChange={this.handleChange('role')} margin="normal" />
+            <CirclePicker color={this.state.color} onChange={this.handleColorChange} />
           </DialogContent>
           <DialogActions>
             <Button type="cancel" onClick={onClose} color="primary">Close</Button>
