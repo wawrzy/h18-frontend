@@ -30,7 +30,7 @@ class ScheduledStaff extends React.Component {
     const { classes, staff } = this.props
 
     return (
-      <div role="button" tabIndex="0" className={classes.root} onClick={this.showStaff}>
+      <div role="button" tabIndex="0" className={classes.root} style={{ backgroundColor: this.props.staff.color }} onClick={this.showStaff}>
         <div className={classes.label}>
           {staff.firstName}
         </div>
